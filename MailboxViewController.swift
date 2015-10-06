@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MailboxViewController: UIViewController, UIScrollViewDelegate {
+class MailboxViewController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     
     //MARK: Outlets
     
@@ -19,76 +19,89 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var listView: UIView!
     @IBOutlet weak var feedView: UIImageView!
     @IBOutlet weak var actionView: UIView!
+    @IBOutlet weak var menuView: UIImageView!
+    @IBOutlet weak var mailboxScreenView: UIView!
     
     
     //MARK: Variables
     
-    var messageViewOriginalCenter: CGPoint!
-    var originalPosition: CGFloat!
+    var messageViewOrigin: CGFloat!
+    var mailboxScreenViewOrigin: CGFloat!
+    
+    
+    //MARK: First Screen Visible
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        messageViewOriginalCenter = messageView.center
-        
         feedScrollView.delegate = self
-        feedScrollView.contentSize = CGSize(width: 320, height: 1200)
-        
+        feedScrollView.contentSize = CGSize(width: 320, height: 1180)
         iconScreenView.alpha = 0
         
-        print(messageViewOriginalCenter)
+        let edgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: "onEdgePan:")
+        edgeGesture.edges = UIRectEdge.Left
+        mailboxScreenView.addGestureRecognizer(edgeGesture)
         
     }
     
     //MARK: Actions
     
-    @IBAction func onMessageViewPanGesture(sender: UIPanGestureRecognizer) {
+    @IBAction func onMessageViewPanGesture(sender: UIScreenEdgePanGestureRecognizer) {
         
         let location = sender.locationInView(view)
-        let translation = sender.translationInView(view)
+        //let translation = sender.translationInView(view)
         let laterPosition: CGFloat!
-        let offPosition: CGFloat!
+        let velocity = sender.velocityInView(view)
         
-        laterPosition = 90
-        offPosition = -300
+        laterPosition = -60
         
         if sender.state == UIGestureRecognizerState.Began {
-            messageViewOriginalCenter.x = messageView.center.x
-            
-            
             
             print("Gesture began")
+            print(messageView.frame.origin.x)
             
-        }
-            
-        else if sender.state == UIGestureRecognizerState.Changed {
-            messageView.center.x = CGFloat(messageViewOriginalCenter.x + translation.x)
-            
-            print (translation.x)
-            print("Gesture changed")
-            
-        }
-            
-        else if sender.state == UIGestureRecognizerState.Ended {
-            print("Gesture ended")
-            
-            if messageViewOriginalCenter.x < 100 {
-                self.listView.backgroundColor = UIColor.isBrownColor()
-                
-                UIView.animateWithDuration(2.0, animations: { () -> Void in
-                    self.messageView.center.x = offPosition
-                    self.iconScreenView.alpha = 1 })
-                
-            } else if messageViewOriginalCenter.x < 200 {
+            if velocity.x < -60 {
                 self.listView.backgroundColor = UIColor.isYellowColor()
-                UIView.animateWithDuration(0.2, animations: { () -> Void in
-                    self.messageView.center.x = laterPosition
-                    
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.messageView.frame.origin.x = laterPosition
                 })
                 
+            } else if velocity.x > -60 {
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.messageView.frame.origin.x = 0
+                })
+                
+            } else if messageView.frame.origin.x < -70 {
+                self.listView.backgroundColor = UIColor.isBrownColor()
+                UIView.animateWithDuration(1.3, animations: { () -> Void in
+                    self.messageView.frame.origin.x = laterPosition - 200
+                    self.iconScreenView.alpha = 1
+                })
             }
+            
+        } else if sender.state == UIGestureRecognizerState.Changed {
+            
+            //print (translation.x)
+            print("Gesture changed")
+            
+            
+        } else if sender.state == UIGestureRecognizerState.Ended {
+            
+            print("Gesture ended")
+            print(messageView.frame.origin.x)
+            
+            //            if velocity.x > 220 {
+            //                self.listView.backgroundColor = UIColor.isBrownColor()
+            //
+            //                UIView.animateWithDuration(1.3, animations: { () -> Void in
+            //                    self.messageView.frame.origin.x = laterPosition - 200
+            //                    self.iconScreenView.alpha = 1 })
+            
+            //            }
         }
     }
+    
+    //Dismiss Icon Screen with tap gesture
     
     @IBAction func onIconScreenViewTapGesture(sender: UIPanGestureRecognizer) {
         self.iconScreenView.userInteractionEnabled = true
@@ -98,15 +111,37 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate {
     
     func dismissImageView(gestureRecognizer: UITapGestureRecognizer) {
         self.iconScreenView.removeFromSuperview()
-        messageView.center.x = messageViewOriginalCenter.x + 70
-        
-
+        self.messageView.frame.origin.x = 0
     }
-
+    
+    //Reveal Menu with screePanGesture
     
     @IBAction func onMenuScreenPanGesture(sender: UIScreenEdgePanGestureRecognizer) {
+        
+        let location = sender.locationInView(view)
+        let translation = sender.translationInView(view)
+        
+        if sender.state == UIGestureRecognizerState.Began {
+            mailboxScreenViewOrigin = mailboxScreenView.frame.origin.x
+            
+            print("Gesture2 began")
+        }
+        
+        if sender.state == UIGestureRecognizerState.Changed {
+            mailboxScreenView.frame.origin.x = mailboxScreenView.frame.origin.x + translation.x
+            print("Gesture2 changed")
+        }
+            
+        else if sender.state == UIGestureRecognizerState.Ended {
+            if location.x > 150 {
+                UIView.animateWithDuration(0.4, animations: { () -> Void in
+                    self.mailboxScreenView.frame.origin.x = 280
+                })
+                print("Gesture2 ended")
+                
+            }
+        }
     }
-
 }
 
 
