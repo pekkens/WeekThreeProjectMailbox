@@ -1,6 +1,8 @@
 # WeekThreeProjectMailbox
 iOS demo of gestures tiggered by interactions used in Mailbox
 
+Hours Spent: 
+
 Requirements:
 
 On dragging the message left...
