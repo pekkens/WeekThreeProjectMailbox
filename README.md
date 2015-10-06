@@ -29,3 +29,5 @@ Optionals:
 * [ ] Tapping the segmented control in the title should swipe views in from the left or right.
 
 Video Wlakthrough:
+
+![weekthreeprojectmailbox](https://cloud.githubusercontent.com/assets/9056938/10302409/f5af8e22-6bc0-11e5-884c-7f93b62a019d.gif)
