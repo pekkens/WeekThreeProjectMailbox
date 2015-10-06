@@ -43,11 +43,11 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate {
         
         let location = sender.locationInView(view)
         let translation = sender.translationInView(view)
-        var laterPosition: CGFloat!
+        let laterPosition: CGFloat!
         let deletePosition: CGFloat!
         let offPosition: CGFloat!
         
-        laterPosition = 100
+        laterPosition = 90
         offPosition = -300
         
         if sender.state == UIGestureRecognizerState.Began {
@@ -70,19 +70,22 @@ class MailboxViewController: UIViewController, UIScrollViewDelegate {
         else if sender.state == UIGestureRecognizerState.Ended {
             print("Gesture ended")
             
-            if location.x > -5 {
-                self.listView.backgroundColor = UIColor.isYellowColor()
-                self.messageView.center.x = laterPosition
-            }
-        
-            else if location.x > laterPosition {
-            self.listView.backgroundColor = UIColor.isBrownColor()
-            self.messageView.center.x = offPosition
+            if messageViewOriginalCenter.x < -150 {
+                self.listView.backgroundColor = UIColor.isBrownColor()
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.messageView.center.x = offPosition
+                    self.iconScreenView.alpha = 1 })
             
-            iconScreenView.alpha = 1
-                
+            } else if messageViewOriginalCenter.x < 100 {
+                self.listView.backgroundColor = UIColor.isYellowColor()
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.messageView.center.x = laterPosition
+                })
+            }
+            
+
             }
         }
     }
-}
+
 

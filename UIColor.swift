@@ -14,7 +14,7 @@ extension UIColor {
     }
 
     class func isGreenColor() -> UIColor {
-        return UIColor(red: 130.0 / 255.0, green: 189.0 / 255.0, blue: 68.0 / 255.0, alpha: 1.0)
+        return UIColor(red: 120.0 / 255.0, green: 245.0 / 255.0, blue: 135.0 / 255.0, alpha: 1.0)
     }
 
     class func isRedColor() -> UIColor {
@@ -22,7 +22,7 @@ extension UIColor {
     }
     
     class func isBrownColor() -> UIColor {
-        return UIColor(red: 220.0 / 255.0, green: 128.0 / 255.0, blue: 235.0 / 255.0, alpha: 1.0)
+        return UIColor(red: 222.0 / 255.0, green: 188.0 / 255.0, blue: 153.0 / 255.0, alpha: 1.0)
     }
 
 }
